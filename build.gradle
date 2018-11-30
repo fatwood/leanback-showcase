@@ -18,11 +18,11 @@
 
 buildscript {
     repositories {
-        google()
         jcenter()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-beta6'
+        classpath 'com.android.tools.build:gradle:3.2.1'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -41,12 +41,22 @@ task clean(type: Delete) {
 }
 
 ext {
-    buildToolsVersion = "26.0.1"
-    supportLibVersion = "26.0.2"
+    supportLibVersion = "26.1.0"
     runnerVersion = "1.0.1"
     rulesVersion = "1.0.1"
     espressoVersion = "3.0.1"
-    archLifecycleVersion = "1.0.0-alpha9"
-    archRoomVersion = "1.0.0-alpha9"
+    archLifecycleVersion = "1.1.1"
+    archRoomVersion = "1.1.1"
 }
 
+
+subprojects {
+    project.configurations.all {
+        resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == 'com.android.support'
+                    && !details.requested.name.contains('multidex')) {
+                details.useVersion supportLibVersion
+            }
+        }
+    }
+}
